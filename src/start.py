@@ -25,6 +25,9 @@ def main():
         if message.content.startswith("!shower") or message.content.startswith("!showered"):
             await message.channel.send(shower.showered(message.author))
 
+        if message.content.startswith("!leaderboard") or message.content.startswith("!lb"):
+            await message.channel.send(shower.leaderboard())
+
         
 
     client.run(KEY)

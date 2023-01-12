@@ -1,15 +1,21 @@
-#sorry, but I was too lazy to do it properly with a json ^^'
-FILE = "shower_data.txt"
+import json
+
+FILE = "shower_data.json"
 users = []
 
-def loadFile(file):
-    print("not implemented yet")
+def loadFile():
+    file = open(FILE, "r")
+    content = json.loads(file.read())
+    file.close()
+    global users
+    users = content["users"]
 
 def saveFile(file):
-    content = ""
-    for user in users:
-        content += user["user"] + ":" + str(user["timesShowered"]) + "|"
-    file.write(content)
+    content = {
+        "users": users
+    }
+    
+    file.write(json.dumps(content))
 
 def hasUser(seekedUser: str) -> dict:
     i = 0
@@ -21,10 +27,10 @@ def hasUser(seekedUser: str) -> dict:
 
 
 def showered(user) -> str:
+    if users == []:
+        loadFile()
+    
     file = open(FILE, "w")
-
-    if users == {}:
-        loadFile(file)
     
     existingUser = hasUser(user.name)
     if existingUser["boolean"]:
@@ -39,3 +45,31 @@ def showered(user) -> str:
         })
         saveFile(file)
         return (user.name + " has just showered for the first time...finally")
+
+def sortFunc(e):
+    return e["timesShowered"]
+
+def countShowerings() -> int:
+    n = 0
+    for user in users:
+        n += user["timesShowered"] 
+    return n
+
+def leaderboard() -> str:
+    if users == []:
+        loadFile()
+
+    lb = users
+    lb.sort(key=sortFunc, reverse=True)
+    
+    message = """
+    People have gotten wet a total of {} times.
+    
+    1. {} with {} times 
+    2. {} with {} times 
+    3. {} with {} times 
+    """.format(countShowerings(), lb[1]["user"], lb[1]["timesShowered"], lb[2]["user"], lb[2]["timesShowered"], lb[3]["user"], lb[3]["timesShowered"])
+
+    return message
+
+    
