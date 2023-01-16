@@ -28,7 +28,8 @@ def main():
         if message.content.startswith("!leaderboard") or message.content.startswith("!lb"):
             await message.channel.send(shower.leaderboard())
 
-        
+        if message.content.startswith("!rank"):
+            await message.channel.send(shower.rank(message.author))
 
     client.run(KEY)
 

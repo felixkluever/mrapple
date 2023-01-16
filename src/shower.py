@@ -61,6 +61,8 @@ def leaderboard() -> str:
 
     lb = users
     lb.sort(key=sortFunc, reverse=True)
+
+    lb.pop(0)
     
     message = """
     People have gotten wet a total of {} times.
@@ -68,8 +70,22 @@ def leaderboard() -> str:
     1. {} with {} times 
     2. {} with {} times 
     3. {} with {} times 
-    """.format(countShowerings(), lb[1]["user"], lb[1]["timesShowered"], lb[2]["user"], lb[2]["timesShowered"], lb[3]["user"], lb[3]["timesShowered"])
+    """.format(countShowerings(), lb[0]["user"], lb[0]["timesShowered"], lb[1]["user"], lb[1]["timesShowered"], lb[2]["user"], lb[2]["timesShowered"])
 
     return message
 
+def rank(user) -> str:
+    if users == []:
+        loadFile()
     
+    lb = users
+    lb.sort(key=sortFunc, reverse=True)
+
+    lb.pop(0)
+
+    i = 0
+    for u in lb:
+        i += 1
+        if u["user"] == user.name:
+            return "{} is current ranked {} with {} times showered.".format(user.name, i, u["timesShowered"])
+    return "{} is currently not on the leaderboard".format(user.name)
